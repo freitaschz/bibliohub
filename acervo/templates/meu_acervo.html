@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block head_title %}Meu Acervo{% endblock  %}
+
+{% block content %}
+
+<h1 class="text-center mt-4">Meu Acervo de Livros</h1>
+
+{% if user.first_name %}
+<h2 class="text-center h3 mb-4">Esse é o acervo de livros de <span class="fw-semibold">{{ user.first_name }}</span></h2>
+{% else %}
+<h2 class="text-center h3 mb-4">Esse é um acervo de livros incrível</h2>
+{% endif %}
+
+{% if acervo_livros %}
+
+<section class="px-5 gap-5 d-flex align-items-start">
+    {% for livro in acervo_livros  %}
+
+    <div class="p-4 border rounded d-flex flex-column justify-content-center align-items-center">
+        <img src="{{ livro.dados_livro.capa.url }}" alt="Capa do livro {{ livro.dados_livro.titulo }}" title="{{ livro.dados_livro.titulo }}" width="200">
+        <div class="mt-4 fs-5 d-flex justify-content-center align-items-center gap-2">
+            <p class="m-0 p-0">{{ livro.dados_livro.titulo }}</p>
+
+            {% if livro.livro_favorito_usuario %}
+            <i class="bi bi-heart-fill text-danger" title="Esse livro é favorito" role="img" aria-label="Favorito"></i>
+            {% else %}
+            <i class="bi bi-heart" title="Esse livro não é favorito" role="img" aria-label="Não favorito"></i>
+            {% endif %}
+
+            {% if livro.livro_lido_usuario %}
+            <i class="bi bi-eye-fill text-primary" title="Esse livro foi lido" role="img" aria-label="Lido"></i>
+            {% else %}
+            <i class="bi bi-eye" title="Esse livro não foi lido" role="img" aria-label="não lido"></i>
+            {% endif %}
+        </div>
+        <p class="m-0 p-0">ISBN - {{ livro.dados_livro.isbn }}</p>
+        <form action="/excluir-livro-acervo/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="idRelacao" value="{{ livro.id_relacao }}">
+            <button class="btn btn-danger btn-sm mt-2" type="submit">Remover do Acervo</button>
+        </form>
+    </div>
+
+    {% endfor %}
+</section>
+
+{% else %}
+
+<p class="h5 text-center text-decoration-underline">Você não adicionou nenhum livro no seu acervo pessoal!</p>
+
+{% endif %}
+
+{% endblock  %}

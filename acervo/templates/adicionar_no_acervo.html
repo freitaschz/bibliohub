@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block head_title %}Adicionar no Acervo{% endblock  %}
+
+{% block content %}
+
+<h1 class="text-center mt-4">Adicionar Livro no Acervo</h1>
+
+{% if livros_disponiveis %}
+
+<form action="/adicionar-livro-acervo/cadastrar/" method="post" class="p-4 d-flex flex-column justify-content-center align-items-start gap-2">
+    {% csrf_token %}
+    <div class="input-group">
+        <label class="input-group-text" for="livro">Livro <span class="text-danger">*</span></label>
+        <select class="form-select" id="livro" name="livro" required>
+            {% for livro in livros_disponiveis %}
+            <option value="{{ livro.id }}">{{ livro.titulo }} - ISBN {{ livro.isbn }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="livroFavorito" name="livroFavorito">
+        <label class="form-check-label" for="livroFavorito">Favoritar livro</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="livroLido" name="livroLido">
+        <label class="form-check-label" for="livroLido">Livro lido</label>
+    </div>
+    <button class="btn btn-primary" type="submit">Adicionar no Acervo</button>
+</form>
+
+{% else %}
+
+<h2 class="text-center h3">Todos os livros cadastrados no <span class="fw-semibold">BiblioHub</span> já foram adicionados no seu acervo!</h2>
+
+{% endif %}
+
+{% endblock  %}
